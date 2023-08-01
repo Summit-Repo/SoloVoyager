@@ -1,0 +1,231 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<nav class="navbar bg-color font-color">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-globe-americas fa-2x mr-2"></i>
+            <h2><b>Solo Voyager</b></h2>
+        </div>
+        <div class="d-md-flex align-items-center">
+            <i class="fas fa-globe-americas fa-2x mr-2"></i>
+        </div>
+        <div class="d-flex flex-wrap">
+            <button class="btn btn-sm btn-success me-2" type="button" (click)="manageConcerns()">Concern</button>
+            <button class="btn btn-sm btn-success me-2" type="button" (click)="manageUsers()">User</button>
+            <button class="btn btn-sm btn-success" type="button" (click)="Logout()">Logout</button>
+        </div>
+    </div>
+</nav>
+
+
+
+<div *ngIf="isConcernPage">
+    <div class="scrollable-container dark-border-color">
+
+        <div class="row" *ngIf="unresolvedConcerns.length > 0; else noUnresolvedConcerns">
+            <div class="col-lg-12 dark-border-color  mt-1 shadow-lg mb-1  rounded"
+                *ngFor="let concern of unresolvedConcerns">
+                <div class="list-group">
+                    <div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <h5 class="mb-1 dark-font-color">Post ID</h5>
+                                <p>{{ concern.post_id }}</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <h5 class="mb-1 dark-font-color">Concern</h5>
+                                <p>{{ concern.concern_text }}</p>
+                            </div>
+                            <div class="col-sm-4 d-flex justify-content-end">
+                                <button class="btn" style="font-size:large"
+                                    (click)="fetchConcernDetails(concern.post_id,concern.concern_id)"><i
+                                        class="fa fa-ellipsis-h"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #noUnresolvedConcerns>
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <h1><span class="badge bg-secondary">No unresolved concerns found.</span></h1>
+            </div>
+        </ng-template>
+    </div>
+
+
+
+    <div class="row">
+        <div *ngIf="postItems.length == 0">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <h1><span class="badge bg-secondary">Concern must be selected to see Details here.</span></h1>
+            </div>
+        </div>
+
+        <div class="col-12 dark-border-color  mt-4 shadow-lg p-3 mb-5 bg-body-tertiary rounded"
+            *ngFor="let post of postItems">
+            <div class="row">
+                <div class="col-sm-1">
+                    <h5 class="dark-font-color">Details :</h5>
+                </div>
+                <div class="col-10"></div>
+                <div class="col-sm-1 "><button style="font-size:30px;color:red" class="btn" title="Ban"
+                        (click)="blockPost(post.post_id, false)"><i class="fa fa-ban"></i></button>
+                    <button style="font-size:30px;color:green" class="btn" title="Pass"
+                        (click)="blockPost(post.post_id, true)"><i class="fa fa-check-circle"></i></button>
+                </div>
+
+            </div>
+
+
+
+            <div class="list-group">
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h5 class="mb-1 dark-font-color">Title</h5>
+                            <p>{{ post.title }}</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5 class="mb-1 dark-font-color">Posted by:</h5>
+                            <a href="javascript:void(0);" (click)="onUsernameClick(post.username)">{{ post.username
+                                }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h5 class="mb-1 dark-font-color">Place</h5>
+                            <p>{{ post.place }}</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5 class="mb-1 dark-font-color">Days</h5>
+                            <p>{{ post.days }}</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5 class="mb-1 dark-font-color">Budget</h5>
+                            <p>{{ post.budget | currency:'EUR':'symbol':'1.2-2' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h5 class="mb-1 dark-font-color">Areas</h5>
+                            <ul class="scrollable-list">
+                                <li *ngFor="let area of post.complex_data.areas">{{ area }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3">
+                            <h5 class="mb-1 dark-font-color">Food</h5>
+                            <ul class="scrollable-list">
+                                <li *ngFor="let food of post.complex_data.food">{{ food }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3">
+                            <h5 class="mb-1 dark-font-color">Activities</h5>
+                            <ul class="scrollable-list">
+                                <li *ngFor="let activity of post.complex_data.activities">{{ activity }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3">
+                            <h5 class="mb-1 dark-font-color">Hotels</h5>
+                            <ul class="scrollable-list">
+                                <li *ngFor="let hotel of post.complex_data.hotels">{{ hotel }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="list-group-item">
+                    <h5 class="mb-1 dark-font-color">Detail Story</h5>
+                    <p>{{ post.complex_data.detail_story }}</p>
+                </div>
+                <div class="list-group-item">
+                    <h5 class="mb-1 dark-font-color">Upvotes</h5>
+                    <p>{{ post.upvote }}</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-5" *ngIf="isManageUsers">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <input type="text" class="form-control dark-border-color" [(ngModel)]="searchUsername" name="place"
+            placeholder="Search username" required>
+    </div>
+    <div class="col-2">
+        <button id="searchUser" class="btn btn-md btn-success" (click)="searchUser(searchUsername)">Search</button>
+    </div>
+</div>
+
+<div class="container dark-border-color mt-5 shadow-lg" *ngIf="isManageUsers">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-sm-6">
+            <div class="row mt-3">
+                <div class="col-6">
+                    <strong>User ID:</strong>
+                </div>
+                <div class="col-6">
+                    {{ user.id }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <strong>Username:</strong>
+                </div>
+                <div class="col-6">
+                    {{ user.username }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <strong>Account Status:</strong>
+                </div>
+                <div class="col-6">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="isActiveSwitch" [(ngModel)]="user.isActive"
+                            (change)="updateAcountStatus(user.isActive)">
+                        <label class="form-check-label" for="isActiveSwitch">
+                            Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 mb-5">
+                <div class="col-6">
+                    <strong>User Type:</strong>
+                </div>
+                <div class="col-6">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="isAdminSwitch" [(ngModel)]="user.isAdmin"
+                            (change)="updateAcountType(user.isAdmin)">
+                        <label class="form-check-label" for="isAdminSwitch">
+                            Admin
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 mb-5" *ngIf="isback">
+                <div class="col-6">
+
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-sm btn-warning" (click)="back()">Back</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+
+    </div>
+</div>

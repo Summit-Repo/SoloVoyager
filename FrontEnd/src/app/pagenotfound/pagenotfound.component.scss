@@ -1,0 +1,13 @@
+.notFound {
+    background-image: url('../../assets/images/404-not-found.png');
+    background-size: cover;
+    min-height: 50vh;
+    width: 50vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
